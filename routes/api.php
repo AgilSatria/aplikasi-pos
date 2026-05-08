@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\V1\ProductCategoryController;
 use App\Http\Controllers\Api\V1\ProductCategoryImageController;
 use App\Http\Controllers\Api\V1\ProductController;
 use App\Http\Controllers\Api\V1\ProductImageController;
+use App\Http\Controllers\Api\V1\CustomerController;
 
 Route::prefix('v1')->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
@@ -28,5 +29,9 @@ Route::prefix('v1')->group(function () {
 
         Route::post('products/{id}/image', [ProductImageController::class, 'store']);
         Route::apiResource('products', ProductController::class);
+
+        Route::get('customers/options', [CustomerController::class, 'options']);
+        Route::apiResource('customers', CustomerController::class);
     });
 });
+
