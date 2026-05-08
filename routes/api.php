@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\V1\ProductCategoryController;
 use App\Http\Controllers\Api\V1\ProductCategoryImageController;
+use App\Http\Controllers\Api\V1\ProductController;
+use App\Http\Controllers\Api\V1\ProductImageController;
 
 Route::prefix('v1')->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
@@ -21,5 +23,10 @@ Route::prefix('v1')->group(function () {
 
         Route::post('product-categories/{id}/image', [ProductCategoryImageController::class, 'store']);
         Route::apiResource('product-categories', ProductCategoryController::class);
+
+        Route::get('products/options', [ProductController::class, 'options']);
+
+        Route::post('products/{id}/image', [ProductImageController::class, 'store']);
+        Route::apiResource('products', ProductController::class);
     });
 });
