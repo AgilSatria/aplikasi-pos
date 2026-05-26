@@ -11,10 +11,27 @@ use App\Http\Requests\UploadProductImageRequest;
 
 use App\Helpers\ApiResponse;
 use App\Http\Resources\ProductResource;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Facades\Storage;
+use Spatie\Permission\Middleware\PermissionMiddleware;
 
-class ProductImageController extends Controller
+class ProductImageController extends Controller implements HasMiddleware
+
 {
+
+    public static function middleware()
+    {
+        return [
+
+            new Middleware(PermissionMiddleware::using('edit_products'))
+
+
+        ];
+    }
+
+
+
     public function store(UploadProductImageRequest $request, string $id)
     {
         // Handle image upload for the product

@@ -13,10 +13,29 @@ use App\Http\Resources\ProductResource;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\UpdateProductRequest;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
+use Spatie\Permission\Middleware\PermissionMiddleware;
 
-
-class ProductController extends Controller
+class ProductController extends Controller implements HasMiddleware
 {
+
+
+    public static function middleware()
+    {
+        return [
+            new Middleware(PermissionMiddleware::using('view_products'), only: ['index', 'show', 'options']),
+            new Middleware(PermissionMiddleware::using('create_products'), only: ['store']),
+            new Middleware(PermissionMiddleware::using('edit_products'), only: ['update']),
+            new Middleware(PermissionMiddleware::using('delete_products'), only: ['destroy']),
+
+
+        ];
+    }
+
+
+
+
     /**
      * Display a listing of the resource.
      */
@@ -34,9 +53,14 @@ class ProductController extends Controller
 
 
     public function options(GetProductsRequest $request)
-
     {
-        $products = Product::select('id', 'name')
+        $products = Product::select(
+            'id',
+            'name',
+            'price',
+            'image',
+            'stock'
+        )
             ->search($request->search)
             ->latest()
             ->get();

@@ -11,12 +11,35 @@ use App\Http\Requests\StoreTransactionRequest;
 use App\Helpers\ApiResponse;
 use App\Http\Resources\PaginatedResource;
 use App\Http\Resources\TransactionResource;
+
 use Illuminate\Http\Response;
+use Illuminate\Routing\Controllers\HasMiddleware;
+
 use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Middleware\PermissionMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-
-class TransactionController extends Controller
+class TransactionController extends Controller implements HasMiddleware
 {
+
+
+    public static function middleware()
+    {
+        return [
+            new Middleware(
+                PermissionMiddleware::using('view_transactions'),
+                only: ['index', 'show']
+            ),
+
+            new Middleware(
+                PermissionMiddleware::using('create_transactions'),
+                only: ['store']
+            ),
+        ];
+    }
+
+
+
     /**
      * Display a listing of the resource.
      */

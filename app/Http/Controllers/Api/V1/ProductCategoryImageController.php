@@ -11,10 +11,27 @@ use App\Http\Requests\UploadProductCategoryImageRequest;
 
 use App\Helpers\ApiResponse;
 use App\Http\Resources\ProductCategoryResource;
+use GuzzleHttp\Middleware;
+use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Support\Facades\Storage;
+use Spatie\Permission\Middleware\PermissionMiddleware;
 
-class ProductCategoryImageController extends Controller
+class ProductCategoryImageController extends Controller implements HasMiddleware
 {
+
+    public static function middleware()
+    {
+        return [
+
+            new Middleware(PermissionMiddleware::using('edit_product_categories')),
+
+
+
+        ];
+    }
+
+
+
     public function store(UploadProductCategoryImageRequest $request, string $id)
     {
         // Handle image upload for the product category
